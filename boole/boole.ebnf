@@ -1,0 +1,20 @@
+waffle: "#"
+
+username: /\w+/
+username_directive: waffle "u" username
+
+assignment: /\d+/
+assignment_directive: waffle "a" assignment
+
+question: assignment /\d+/
+question_directive: waffle "q" question
+
+check: /\w+/
+check_directive: waffle "check" check
+
+checks: check checks | check
+questionblock: question checks
+questionblocks: questionblock questionblocks | questionblock
+header: username assignment | assignment username
+
+document: header questionblocks

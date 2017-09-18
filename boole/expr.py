@@ -110,6 +110,9 @@ class BooleanExpressionTransform(InlineTransformer):
     def on_result(self, result):
         return result
 
+    def on_paren(self, lparen, expr, rparen):
+        return expr
+
 
 def parse(boolexpr_str):
     """

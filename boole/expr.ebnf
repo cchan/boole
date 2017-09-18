@@ -11,15 +11,15 @@ LITERAL: /[a-zA-Z]+/
 ?iffexpr:   impexpr
           | impexpr IFF iffexpr     -> on_iff
 ?impexpr:   orexpr
-          | orexpr IMP impexpr      -> on_or
+          | orexpr IMP impexpr      -> on_imp
 ?orexpr:    andexpr
-          | andexpr OR orexpr       -> on_and
+          | andexpr OR orexpr       -> on_or
 ?andexpr:   notexpr
           | notexpr AND andexpr     -> on_and
 ?notexpr:   parenexpr
           | NOT parenexpr           -> on_not
 ?parenexpr: literal
-          | LPAREN iffexpr RPAREN
+          | LPAREN iffexpr RPAREN   -> on_paren
 
 ?boolexpr:  iffexpr                 -> on_result
 

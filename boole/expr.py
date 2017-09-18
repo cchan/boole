@@ -6,10 +6,11 @@ and transform it into an AST.
 """
 
 import os
+import io
 
 from lark import Lark, InlineTransformer, ParseError
 
-with open(os.path.join(os.path.dirname(__file__), 'expr.ebnf')) as bnf:
+with io.open(os.path.join(os.path.dirname(__file__), 'expr.ebnf'), encoding='utf-8') as bnf:
     parser = Lark(bnf.read(), start='boolexpr')
 
 

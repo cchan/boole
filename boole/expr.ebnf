@@ -1,10 +1,10 @@
 LPAREN: "("
 RPAREN: ")"
-NOT: "!" | "~" | "\neg"
-AND: "&" | "\wedge"
-OR: "|" | "\vee"
-IMP: "=>" | "\implies"
-IFF: "<=>" | "\iff"
+NOT: "!" | "~" | "\neg" | "¬"
+AND: "&" | "\wedge" | "∧"
+OR: "|" | "\vee" | "∨"
+IMP: "=>" | "\implies" | "⇒" | "→" | "⟹"
+IFF: "<=>" | "\iff" | "⇔" | "↔" | "⟺"
 LITERAL: /[a-zA-Z]+/
 
 ?literal:   LITERAL                 -> on_literal

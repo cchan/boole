@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 import unittest
 
 from boole.expr import *
@@ -24,6 +26,14 @@ class ExpressionTest(unittest.TestCase):
 
     def test_precedence(self):
         self.assertEqual(parse('~a & b | c => d <=> e'),
+                         Iff(Implies(Or(And(Not(Variable('a')),
+                                            Variable('b')),
+                                        Variable('c')),
+                                     Variable('d')),
+                             Variable('e')))
+
+    def test_unicode(self):
+        self.assertEqual(parse(u'¬a ∧ b ∨ c ⇒ d ⇔ e'),
                          Iff(Implies(Or(And(Not(Variable('a')),
                                             Variable('b')),
                                         Variable('c')),

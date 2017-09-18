@@ -6,16 +6,21 @@ from boole.prop import *
 
 
 class ExpressionTest(unittest.TestCase):
+    def assertInvalid(self, expr):
+        with self.assertRaises(InvalidExpressionError):
+            try:
+                parse(expr)
+            except InvalidExpressionError as e:
+                print('When checking:', expr)
+                print(e.args[0])
+                print()
+                raise
+
     def test_and(self):
         self.assertEqual(parse('a & b'), And(Variable('a'), Variable('b')))
 
     def test_double_and(self):
-        with self.assertRaises(InvalidExpressionError):
-            try:
-                parse('a && b')
-            except InvalidExpressionError as e:
-                print(e.args[0])
-                raise
+        self.assertInvalid('a && b')
 
     def test_nesting(self):
         self.assertEqual(parse('a & (b | !(c => (d <=> e)))'),

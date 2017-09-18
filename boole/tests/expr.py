@@ -12,9 +12,20 @@ class ExpressionTest(unittest.TestCase):
             parse('a && b')
 
     def test_nesting(self):
-        self.assertEqual(parse('a & (b | (c => (d <=> e)))'),
+        self.assertEqual(parse('a & (b | !(c => (d <=> e)))'),
                          And(Variable('a'),
                              Or(Variable('b'),
-                                Implies(Variable('c'),
-                                        Iff(Variable('d'),
-                                            Variable('e'))))))
+                                Not(Implies(Variable('c'),
+                                            Iff(Variable('d'),
+                                                Variable('e')))))))
+
+    def test_associativity(self):
+        self.assertEqual(parse('a & b & c'), And(Variable('a'), And(Variable('b'), Variable('c'))))
+
+    def test_precedence(self):
+        self.assertEqual(parse('~a & b | c => d <=> e'),
+                         Iff(Implies(Or(And(Not(Variable('a')),
+                                            Variable('b')),
+                                        Variable('c')),
+                                     Variable('d')),
+                             Variable('e')))

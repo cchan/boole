@@ -39,3 +39,7 @@ class ExpressionTest(unittest.TestCase):
                                         Variable('c')),
                                      Variable('d')),
                              Variable('e')))
+
+    def test_constant(self):
+        self.assertEqual(parse('true & a | false'),
+                         Or(And(Constant(True), Variable('a')), Constant(False)))

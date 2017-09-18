@@ -7,6 +7,8 @@ IMP: "=>" | "\implies" | "⇒" | "→" | "⟹"
 IFF: "<=>" | "\iff" | "⇔" | "↔" | "⟺"
 LITERAL: /[a-zA-Z]+/
 
+?constant:  "true"                  -> on_true
+          | "false"                 -> on_false
 ?literal:   LITERAL                 -> on_literal
 ?iffexpr:   impexpr
           | impexpr IFF iffexpr     -> on_iff
@@ -18,10 +20,11 @@ LITERAL: /[a-zA-Z]+/
           | notexpr AND andexpr     -> on_and
 ?notexpr:   parenexpr
           | NOT parenexpr           -> on_not
-?parenexpr: literal
+?parenexpr: constant
+          | literal
           | LPAREN iffexpr RPAREN   -> on_paren
 
-?boolexpr:  iffexpr                 -> on_result
+?propexpr:  iffexpr                 -> on_result
 
 %import common.WS
 %ignore WS

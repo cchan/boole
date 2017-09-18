@@ -11,7 +11,9 @@ import io
 from lark import Lark, InlineTransformer, ParseError
 
 
-__all__ = ['Expression', 'InvalidExpressionError', 'Variable', 'And', 'Or', 'Implies', 'Iff', 'Not', 'parse']
+__all__ = ['Expression', 'InvalidExpressionError',
+           'Variable', 'Constant', 'parse',
+           'And', 'Or', 'Implies', 'Iff', 'Not']
 
 
 class Expression(object):
@@ -33,6 +35,20 @@ class Variable(Expression):
         if not isinstance(other, Variable):
             return False
         return self.name == other.name
+
+
+class Constant(Expression):
+    def __init__(self, constant):
+        assert isinstance(constant, bool)
+        self.constant = constant
+
+    def __repr__(self):
+        return 'Constant(%r)' % self.constant
+
+    def __eq__(self, other):
+        if not isinstance(other, Constant):
+            return False
+        return self.constant == other.constant
 
 
 class Operation(Expression):
@@ -111,9 +127,15 @@ class BooleanExpressionTransform(InlineTransformer):
     def on_paren(self, lparen, expr, rparen):
         return expr
 
+    def on_true(self):
+        return Constant(True)
+
+    def on_false(self):
+        return Constant(False)
+
 
 with io.open(os.path.join(os.path.dirname(__file__), 'expr.ebnf'), encoding='utf-8') as bnf:
-    parser = Lark(bnf.read(), start='boolexpr', parser='lalr', transformer=BooleanExpressionTransform())
+    parser = Lark(bnf.read(), start='propexpr', parser='lalr', transformer=BooleanExpressionTransform())
 
 
 def parse(boolexpr_str):

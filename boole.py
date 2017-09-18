@@ -1,5 +1,5 @@
 """
-main.py
+boole.py
 """
 
 import boolexpr
@@ -11,6 +11,8 @@ import re
 # state number [int]:
 #   array of
 #     (condition [regex], doing [callback that gets match()], transition_to [int])
+
+EOF = "###EOF###"
 
 def state(expecting = None):
     def func_modifier(currstate):
@@ -57,7 +59,7 @@ def header_declared(line):
 
 @state(expecting="#check declaration")
 def question_declared(line):
-    if line == "###EOF###":
+    if line == EOF:
         return True
     if line.startswith("#check "):
         check = line[7:]
@@ -72,7 +74,7 @@ def check_NONE(line):
         pass
     elif line.startswith("#a "):
         pass
-    elif line == "###EOF###":
+    elif line == EOF:
         return True
     else: # it's a line of solution!
         print("Line of solution in check_NONE!", line)
@@ -86,10 +88,11 @@ def parse(file):
     for i, orig_line in enumerate(file):
         print("Current state:", state.__name__, "\nNew line of code:", orig_line)
         state = state(filename, i+1, orig_line)
-    state = state(filename, i+2, "###EOF###")
+    state = state(filename, i+2, EOF)
     if state is True:
         print("Successfully exited.")
 
-filename = "testgood.boole" # input("Filename: ")
-with open(filename) as file:
-    parse(file)
+if __name__ == "__main__":
+    filename = "testgood.boole" # input("Filename: ")
+    with open(filename) as file:
+        parse(file)

@@ -10,9 +10,6 @@ import io
 
 from lark import Lark, InlineTransformer, ParseError
 
-with io.open(os.path.join(os.path.dirname(__file__), 'expr.ebnf'), encoding='utf-8') as bnf:
-    parser = Lark(bnf.read(), start='boolexpr')
-
 
 __all__ = ['Expression', 'InvalidExpressionError', 'Variable', 'And', 'Or', 'Implies', 'Iff', 'Not', 'parse']
 
@@ -115,12 +112,15 @@ class BooleanExpressionTransform(InlineTransformer):
         return expr
 
 
+with io.open(os.path.join(os.path.dirname(__file__), 'expr.ebnf'), encoding='utf-8') as bnf:
+    parser = Lark(bnf.read(), start='boolexpr', parser='lalr', transformer=BooleanExpressionTransform())
+
+
 def parse(boolexpr_str):
     """
     Returns a parsed AST based on a given boolean string.
     """
     try:
-        ast = parser.parse(boolexpr_str)
+        return parser.parse(boolexpr_str)
     except ParseError as e:
         raise InvalidExpressionError(*e.args)
-    return BooleanExpressionTransform().transform(ast)

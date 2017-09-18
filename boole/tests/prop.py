@@ -2,7 +2,7 @@
 
 import unittest
 
-from boole.prop.expr import *
+from boole.prop import *
 
 
 class ExpressionTest(unittest.TestCase):
@@ -11,7 +11,11 @@ class ExpressionTest(unittest.TestCase):
 
     def test_double_and(self):
         with self.assertRaises(InvalidExpressionError):
-            parse('a && b')
+            try:
+                parse('a && b')
+            except InvalidExpressionError as e:
+                print(e.args[0])
+                raise
 
     def test_nesting(self):
         self.assertEqual(parse('a & (b | !(c => (d <=> e)))'),

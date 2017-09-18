@@ -10,6 +10,7 @@ setup(
     keywords='logic education',
     packages=find_packages(),
     include_package_data=True,
+    install_requires=['lark-parser'],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Console',

@@ -1,8 +1,6 @@
 """
-boolexpr.py
-
-Processes boolean expressions using a context-free grammar defined in expr.ebnf
-and transform it into an AST.
+Processes propositional logic expressions using a context-free grammar
+defined in expr.ebnf and transform it into an AST.
 """
 
 import os

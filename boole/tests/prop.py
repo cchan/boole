@@ -2,7 +2,7 @@
 
 import unittest
 
-from boole.expr import *
+from boole.prop.expr import *
 
 
 class ExpressionTest(unittest.TestCase):

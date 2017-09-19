@@ -1,8 +1,9 @@
 # encoding: utf-8
+from __future__ import print_function
 
 import unittest
 
-from boole.prop import *
+from boole.prop.expr import *
 
 
 class ExpressionTest(unittest.TestCase):

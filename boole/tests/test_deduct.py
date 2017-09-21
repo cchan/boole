@@ -12,9 +12,9 @@ transform = DeductProofTransform().transform
 
 class ProofTest(unittest.TestCase):
     def test_parse_proof_decl(self):
-        self.assertEqual(transform(parser_of_symbol(start='proof_decl').parse('a & b, c |- a')),
+        self.assertEqual(transform(parser_of_symbol(start='proof_decl', parser='lalr').parse('a & b, c |- a')),
                          ([And(Variable('a'), Variable('b')), Variable('c')], Variable('a')))
 
     def test_parse_proof_line(self):
-        self.assertEqual(transform(parser_of_symbol(start='proof_line').parse('1) a & b premise')),
+        self.assertEqual(transform(parser_of_symbol(start='proof_line', parser='lalr').parse('1) a & b premise')),
                          ProofLine(1, And(Variable('a'), Variable('b')), ReasonPremise()))

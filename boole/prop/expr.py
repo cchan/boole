@@ -11,38 +11,43 @@ __all__ = ['Expression', 'InvalidExpressionError',
            'Variable', 'Constant', 'parse',
            'And', 'Or', 'Implies', 'Iff', 'Not']
 
-prop_symbols = r'''LPAREN: "("
-RPAREN: ")"
-NOT: "!" | "~" | "\neg" | "¬"
-AND: "&" | "\\wedge" | "∧"
-OR: "|" | "\\vee" | "∨"
-IMP: "=>" | "\\implies" | "⇒" | "→" | "⟹"
-IFF: "<=>" | "\\iff" | "⇔" | "↔" | "⟺"
-LITERAL: /[a-zA-Z]+/
+prop_symbols = r'''
+    PIPE: "|"
+    MINUS: "-"
+    COMMA: ","
+    LPAREN: "("
+    RPAREN: ")"
+
+    not: "!" | "~" | "\neg" | "¬"
+    and: "&" | "\\wedge" | "∧"
+    or: PIPE | "\\vee" | "∨"
+    imp: "=>" | "\\implies" | "⇒" | "→" | "⟹"
+    iff: "<=>" | "\\iff" | "⇔" | "↔" | "⟺"
+    LITERAL: /[a-zA-Z]+/
 '''
 
 prop_expr = r'''
-?constant:  "true"                  -> on_true
-          | "false"                 -> on_false
-?literal:   LITERAL                 -> on_literal
-?iffexpr:   impexpr
-          | impexpr IFF iffexpr     -> on_iff
-?impexpr:   orexpr
-          | orexpr IMP impexpr      -> on_imp
-?orexpr:    andexpr
-          | andexpr OR orexpr       -> on_or
-?andexpr:   notexpr
-          | notexpr AND andexpr     -> on_and
-?notexpr:   parenexpr
-          | NOT parenexpr           -> on_not
-?parenexpr: constant
-          | literal
-          | LPAREN iffexpr RPAREN   -> on_paren
-
-?propexpr:  iffexpr                 -> on_prop_result
-
-%import common.WS_INLINE
-%ignore WS_INLINE
+    ?constant:  "true"                  -> on_true
+              | "false"                 -> on_false
+    ?literal:   LITERAL                 -> on_literal
+    ?iffexpr:   impexpr
+              | impexpr iff iffexpr     -> on_iff
+    ?impexpr:   orexpr
+              | orexpr imp impexpr      -> on_imp
+    ?orexpr:    andexpr
+              | andexpr or orexpr       -> on_or
+    ?andexpr:   notexpr
+              | notexpr and andexpr     -> on_and
+    ?notexpr:   parenexpr
+              | not parenexpr           -> on_not
+    ?parenexpr: constant
+              | literal
+              | LPAREN iffexpr RPAREN   -> on_paren
+    
+    ?propexpr:  iffexpr                 -> on_prop_result
+    
+    %import common.WS_INLINE
+    %ignore WS_INLINE
 '''
 
 

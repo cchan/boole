@@ -1,17 +1,48 @@
+# encoding: utf-8
 """
 Processes propositional logic expressions using a context-free grammar
 defined in expr.ebnf and transform it into an AST.
 """
 
-import os
-import io
-
 from lark import Lark, InlineTransformer, ParseError
-
 
 __all__ = ['Expression', 'InvalidExpressionError',
            'Variable', 'Constant', 'parse',
            'And', 'Or', 'Implies', 'Iff', 'Not']
+
+prop_symbols = r'''LPAREN: "("
+RPAREN: ")"
+NOT: "!" | "~" | "\neg" | "¬"
+AND: "&" | "\wedge" | "∧"
+OR: "|" | "\vee" | "∨"
+IMP: "=>" | "\implies" | "⇒" | "→" | "⟹"
+IFF: "<=>" | "\iff" | "⇔" | "↔" | "⟺"
+LITERAL: /[a-zA-Z]+/
+'''
+
+prop_expr = r'''
+?constant:  "true"                  -> on_true
+          | "false"                 -> on_false
+?literal:   LITERAL                 -> on_literal
+?iffexpr:   impexpr
+          | impexpr IFF iffexpr     -> on_iff
+?impexpr:   orexpr
+          | orexpr IMP impexpr      -> on_imp
+?orexpr:    andexpr
+          | andexpr OR orexpr       -> on_or
+?andexpr:   notexpr
+          | notexpr AND andexpr     -> on_and
+?notexpr:   parenexpr
+          | NOT parenexpr           -> on_not
+?parenexpr: constant
+          | literal
+          | LPAREN iffexpr RPAREN   -> on_paren
+
+?propexpr:  iffexpr                 -> on_prop_result
+
+%import common.WS
+%ignore WS
+'''
 
 
 class Expression(object):
@@ -100,16 +131,18 @@ class Iff(BinaryOperation):
 def unary_transform(operator):
     def wrapper(self, prefix, operand):
         return operator(operand)
+
     return wrapper
 
 
 def binary_transform(operator):
     def wrapper(self, operand1, infix, operand2):
         return operator(operand1, operand2)
+
     return wrapper
 
 
-class BooleanExpressionTransform(InlineTransformer):
+class PropExpressionTransform(InlineTransformer):
     on_iff = binary_transform(Iff)
     on_imp = binary_transform(Implies)
     on_and = binary_transform(And)
@@ -119,7 +152,7 @@ class BooleanExpressionTransform(InlineTransformer):
     def on_literal(self, literal):
         return Variable(literal.value)
 
-    def on_result(self, result):
+    def on_prop_result(self, result):
         return result
 
     def on_paren(self, lparen, expr, rparen):
@@ -132,8 +165,7 @@ class BooleanExpressionTransform(InlineTransformer):
         return Constant(False)
 
 
-with io.open(os.path.join(os.path.dirname(__file__), 'expr.ebnf'), encoding='utf-8') as bnf:
-    parser = Lark(bnf.read(), start='propexpr', parser='lalr', transformer=BooleanExpressionTransform())
+parser = Lark(prop_symbols + prop_expr, start='propexpr', parser='lalr', transformer=PropExpressionTransform())
 
 
 def parse(boolexpr_str):

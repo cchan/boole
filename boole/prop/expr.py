@@ -3,6 +3,7 @@
 Processes propositional logic expressions using a context-free grammar
 defined in expr.ebnf and transform it into an AST.
 """
+from __future__ import unicode_literals
 
 from lark import Lark, InlineTransformer, ParseError
 

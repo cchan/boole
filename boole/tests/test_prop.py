@@ -34,21 +34,23 @@ class ExpressionTest(unittest.TestCase):
     def test_associativity(self):
         self.assertEqual(parse('a & b & c'), And(Variable('a'), And(Variable('b'), Variable('c'))))
 
+    precedence_result = Iff(Implies(Or(And(Not(Variable('a')),
+                                           Variable('b')),
+                                       Variable('c')),
+                                    Variable('d')),
+                            Variable('e'))
+
     def test_precedence(self):
         self.assertEqual(parse('~a & b | c => d <=> e'),
-                         Iff(Implies(Or(And(Not(Variable('a')),
-                                            Variable('b')),
-                                        Variable('c')),
-                                     Variable('d')),
-                             Variable('e')))
+                         self.precedence_result)
 
     def test_unicode(self):
-        self.assertEqual(parse(u'¬a ∧ b ∨ c ⇒ d ⇔ e'),
-                         Iff(Implies(Or(And(Not(Variable('a')),
-                                            Variable('b')),
-                                        Variable('c')),
-                                     Variable('d')),
-                             Variable('e')))
+        self.assertEqual(parse('¬a ∧ b ∨ c ⇒ d ⇔ e'),
+                         self.precedence_result)
+
+    def test_latex(self):
+        self.assertEqual(parse(r'¬a \wedge b \vee c \implies d \iff e'),
+                         self.precedence_result)
 
     def test_constant(self):
         self.assertEqual(parse('true & a | false'),

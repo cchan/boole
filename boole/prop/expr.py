@@ -14,10 +14,10 @@ __all__ = ['Expression', 'InvalidExpressionError',
 prop_symbols = r'''LPAREN: "("
 RPAREN: ")"
 NOT: "!" | "~" | "\neg" | "¬"
-AND: "&" | "\wedge" | "∧"
-OR: "|" | "\vee" | "∨"
-IMP: "=>" | "\implies" | "⇒" | "→" | "⟹"
-IFF: "<=>" | "\iff" | "⇔" | "↔" | "⟺"
+AND: "&" | "\\wedge" | "∧"
+OR: "|" | "\\vee" | "∨"
+IMP: "=>" | "\\implies" | "⇒" | "→" | "⟹"
+IFF: "<=>" | "\\iff" | "⇔" | "↔" | "⟺"
 LITERAL: /[a-zA-Z]+/
 '''
 
@@ -41,8 +41,8 @@ prop_expr = r'''
 
 ?propexpr:  iffexpr                 -> on_prop_result
 
-%import common.WS
-%ignore WS
+%import common.WS_INLINE
+%ignore WS_INLINE
 '''
 
 

@@ -42,7 +42,8 @@ proof_syntax = '''
 proof_premise: propexpr (COMMA propexpr)*                           -> on_proof_premise
 proof_decl: proof_premise PROVES propexpr                           -> on_proof_decl
 
-line_list: INT (COMMA INT)* | INT RANGE_TO INT 
+line_list: INT (COMMA INT)*                                         -> on_line_list
+         | INT RANGE_TO INT                                         -> on_line_range
 ?reasoning: PREMISE                                                 -> on_reason_premise
           | BY RULES ON line_list                                   -> on_reason_rule
 
@@ -64,6 +65,16 @@ class ReasonPremise(object):
 
     def __eq__(self, other):
         return isinstance(other, ReasonPremise)
+
+
+class ReasonRule(object):
+    def __init__(self, name, bases):
+        """Should be abstract once children are created."""
+        self.name = name
+        self.bases = bases
+
+    def __eq__(self, other):
+        return self.name == other.name and self.bases == other.bases
 
 
 class ProofLine(object):
@@ -95,3 +106,12 @@ class DeductProofTransform(PropExpressionTransform):
 
     def on_reason_premise(self, *args):
         return ReasonPremise()
+
+    def on_reason_rule(self, by, rule, on, bases):
+        return ReasonRule(rule, bases)
+
+    def on_line_list(self, *args):
+        return [int(arg) for arg in args if arg.type == 'INT']
+
+    def on_line_range(self, start, _, end):
+        return list(range(int(start), int(end) + 1))

@@ -18,3 +18,11 @@ class ProofTest(unittest.TestCase):
     def test_parse_proof_line(self):
         self.assertEqual(transform(parser_of_symbol(start='proof_line', parser='lalr').parse('1) a & b premise')),
                          ProofLine(1, And(Variable('a'), Variable('b')), ReasonPremise()))
+
+        self.assertEqual(transform(parser_of_symbol(start='proof_line').parse(
+            '3) a & b by and_i on 1, 2'
+        )), ProofLine(3, And(Variable('a'), Variable('b')), ReasonRule('and_i', [1, 2])))
+
+        self.assertEqual(transform(parser_of_symbol(start='proof_line').parse(
+            '3) a & b by and_i on 1-2'
+        )), ProofLine(3, And(Variable('a'), Variable('b')), ReasonRule('and_i', [1, 2])))

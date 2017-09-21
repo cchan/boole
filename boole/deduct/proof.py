@@ -1,4 +1,6 @@
 # coding: utf-8
+from __future__ import unicode_literals
+
 from lark import Lark
 
 from boole.prop.expr import prop_symbols, prop_expr, PropExpressionTransform, Expression

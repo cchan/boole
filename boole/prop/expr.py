@@ -94,6 +94,9 @@ class UnaryOperation(Operation):
     def __init__(self, operand):
         self.operand = operand
 
+    def __repr__(self):
+        return '%s(%r)' % (self.name, self.operand)
+
     def __eq__(self, other):
         if type(self) is not type(other):
             return False
@@ -106,7 +109,7 @@ class BinaryOperation(Operation):
         self.right = right
 
     def __repr__(self):
-        return '%s(%r, %r)' % (self.__class__.__name__, self.left, self.right)
+        return '%s(%r, %r)' % (self.name, self.left, self.right)
 
     def __eq__(self, other):
         if type(self) is not type(other):

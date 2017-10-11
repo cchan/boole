@@ -43,7 +43,7 @@ def state(expecting=None, check=None):
     return func_modifier
 
 class FileParser(object):
-    def __init__(self, file):
+    def __init__(self, file, filename='[direct input]'):
         self.state = self.initial
         self.D = {}
         self.EOF = '###EOF###'
@@ -124,7 +124,9 @@ class FileParser(object):
     def check_PC(self, line):
         raise NotImplementedError
 
-if __name__ == '__main__':
-    filename = 'tests/testgood.boole'  # input('Filename: ')
+def parse(file):
+    return FileParser(file)
+
+def parseFile(filename):
     with open(filename) as file:
-        parsed = FileParser(file)
+        return FileParser(file, filename)

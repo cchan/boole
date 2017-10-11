@@ -1,9 +1,14 @@
 #u c245chan
 #a 01
 
-#q 01a
+#q 1
 
 #check NONE
 
 stuff
 
+#q 2
+
+#check PROP
+
+(a & b) => !c

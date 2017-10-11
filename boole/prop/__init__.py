@@ -1,1 +1,1 @@
-from boole.prop.expr import *
+from prop.expr import *
